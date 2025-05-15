@@ -1,0 +1,18 @@
+-cp src
+#-main Test
+#-main Cli
+
+OcttDb
+--each
+
+-python out/python.py
+--next
+
+-php out/php
+--next
+
+-lib hxnodejs
+-js out/javascript.js
+--next
+
+#--run Test
