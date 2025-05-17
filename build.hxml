@@ -1,6 +1,6 @@
 -cp src
 #-main Test
-#-main Cli
+-main Cli
 
 OcttDb
 --each

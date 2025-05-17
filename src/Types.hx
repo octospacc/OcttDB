@@ -7,4 +7,5 @@ typedef Rows = Array<Row>;
 enum DbDriver {
   Sqlite;
   SqliteMemory;
+  Filesystem;
 }

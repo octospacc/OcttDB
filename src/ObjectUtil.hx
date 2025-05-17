@@ -20,7 +20,7 @@ class ObjectUtil {
         for (i in 0...obj.length) {
           iterate(obj[i], '${key}${KeySeparator}${i}', valueCallback, objectCallback);
         }
-      case TObject:
+      case TObject: // TUnknown:
         if (objectCallback != null) {
           objectCallback(key, obj);
         }

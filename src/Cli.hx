@@ -1,13 +1,29 @@
+using Types;
 
 class Cli {
   static public function main():Void {
-    var args:Array<String> = Sys.args();
+    #if js
+    js.Syntax.code("if(require.main===module)Cli.appMain();");
+    #elseif python
+    python.Syntax.code("if __name__=='__main__':Cli.appMain()");
+    #end
+    // No CLI usage for PHP for now, detecting it properly is tricky
+  }
+
+  #if !php
+  static public function appMain():Void {
+    final args:Array<String> = Sys.args();
     var dbName:String = null;
+    var usePaths:Bool = null;
 
     while (args.length > 0) {
       switch (args[0]) {
-        case "-d","--db":
-          args.shift(); dbName = args.shift();
+        case "-db":
+          args.shift();
+          dbName = args.shift();
+        case "-usePaths":
+          args.shift();
+          usePaths = Util.parseBool(args.shift());
         default:
           break;
       }
@@ -16,9 +32,15 @@ class Cli {
     if (args.length == 0 || dbName == null) {
       showHelp();
     } else {
-      var db = new OcttDb(dbName, Types.DbDriver.Sqlite);
-      var cmd = args.shift();
-      switch (cmd) {
+      var driver:DbDriver = null;
+      switch (dbName.split(".").pop().toLowerCase()) {
+        case "sqlite", "sqlite3": driver = DbDriver.Sqlite;
+        case "d": driver = DbDriver.Filesystem;
+        default: showHelp();
+      }
+
+      final db = new OcttDb(dbName, driver, { usePaths: usePaths });
+      switch (args.shift().toLowerCase()) {
         case "get": runGet(db, args);
         case "set": runSet(db, args);
         case "del": runDel(db, args);
@@ -28,12 +50,13 @@ class Cli {
   }
 
   static private function showHelp():Void {
-    Sys.stdout().writeString('Usage: octtdb --db <name> <get/set/del> <...>');
+    printResult('Usage: octtdb <-db name.type> [-usePaths true/false] <get/set/del> <...>');
+    Sys.exit(1);
   }
 
   static private function runGet(db, args):Void {
     if (args.length == 1) {
-      printResult(db.get(args[0]));
+      printResult(db.getJson(args[0]));
     } else {
       showHelp();
     }
@@ -41,7 +64,7 @@ class Cli {
 
   static private function runSet(db, args):Void {
     if (args.length == 2) {
-      db.set(args[0], haxe.Json.parse(args[1]));
+      db.setJson(args[0], args[1]);
     } else {
       showHelp();
     }
@@ -58,4 +81,5 @@ class Cli {
   static private function printResult(result):Void {
     Sys.stdout().writeString(Std.string(result));
   }
+  #end
 }

@@ -1,6 +1,8 @@
+using Types;
+
 class Test {
   static public function main():Void {
-    var db = new OcttDb("test", Types.DbDriver.Sqlite);
+    var db = new OcttDbInternal("test.sqlite", DbDriver.Sqlite);
 
     var alice = { name: null, age: 30, tags: ["'admin'", '"beta"'], props: [{ name: "funny", value: 11, extra: { verified: false, status: null } }] };
 
@@ -36,5 +38,15 @@ class Test {
     trace("get .props", db.get("alice.props"));
 
     db.close();
+  }
+}
+
+private class OcttDbInternal extends OcttDb {
+  override public function get(key:Key):Value {
+    return getInternal(key);
+  }
+
+  override public function set(key:Key, value:Value):Void {
+    setInternal(key, value);
   }
 }
