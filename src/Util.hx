@@ -1,7 +1,5 @@
 using Types;
 
-// import haxe.Json;
-
 class Util {
   public static function isPrimeObject(obj:Dynamic) {
     return (obj == null || obj is Bool || obj is Int || obj is Float || obj is String);
@@ -14,8 +12,4 @@ class Util {
       default: return null;
     }
   }
-
-  // public static function normalizeValue(value:Value) {
-  //   return Json.parse(Json.stringify(value));
-  // }
 }

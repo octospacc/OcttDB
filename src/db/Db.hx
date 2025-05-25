@@ -9,13 +9,13 @@ abstract class Db {
     this.keySeparator = keySeparator;
   }
 
-  abstract public function get(key:Key):Value;
-  abstract public function getPrefixed(key:Key):Rows;
+  abstract public function get(store:StoreName, key:Key):Value;
+  abstract public function getPrefixed(store:StoreName, key:Key):Rows;
 
-  abstract public function set(key:Key, value:Value):Void;
+  abstract public function set(store:StoreName, key:Key, value:Value):Void;
 
-  abstract public function del(key:Key):Void;
-  abstract public function delPrefixed(key:Key):Void;
+  abstract public function del(store:StoreName, key:Key):Void;
+  abstract public function delPrefixed(store:StoreName, key:Key):Void;
 
   public function close():Void {};
 }

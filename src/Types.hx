@@ -1,3 +1,4 @@
+typedef StoreName = String;
 typedef Key = String;
 typedef Value = Any;
 
